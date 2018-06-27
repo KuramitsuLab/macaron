@@ -63,7 +63,7 @@ f(n) n > 0
   => n * f(n-1)
 '''
 
-TopLevel = RuleDecl / (LetStmt EOL)
+TopLevel = RuleDecl / (LetStmt EOL) / (Position EOL)
 
 RuleDecl = {
   $context(Context)?
@@ -170,7 +170,11 @@ POSTOP =
 	/ "(" $param(Arguments) ")"   #Apply
 	/ "[" $param(Arguments) "]" #Index
 	/ TO $type(Type) #CastExpr
-	
+
+Position = { $(PositionExpr) #Position}
+
+PositionExpr = Primary {$recv "(" $param(Arguments) ")" #Apply}
+
 TO = 'to' EOT / 'as' EOT / '=>' _
 
 Arguments = { $(Expression)? ( "," $(Expression) )* #Arguments}
